@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <title>Coffee PWA</title>
+</head>
+<body>
+    <header>
+        <h1>Coffee Shop</h1>
+    </header>
+    <main id="coffee-container"></main>
+    <footer>
+        <p>&copy; 2023 Coffee Shop</p>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+header {
+    background: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+#coffee-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    padding: 20px;
+}
+.coffee-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+}
+const coffeeData = [
+    { name: 'Espresso', image: 'espresso.jpg' },
+    { name: 'Latte', image: 'latte.jpg' },
+    { name: 'Cappuccino', image: 'cappuccino.jpg' },
+];
+
+function displayCoffees() {
+    const container = document.getElementById('coffee-container');
+    coffeeData.forEach(coffee => {
+        const card = document.createElement('div');
+        card.className = 'coffee-card';
+        card.innerHTML = `<img src="${coffee.image}" alt="${coffee.name}">
+                          <h2>${coffee.name}</h2>`;
+        container.appendChild(card);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', displayCoffees);
+{
+    "name": "Coffee Shop",
+    "short_name": "Coffee",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#333333",
+    "icons": [
+        {
+            "src": "icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
+const CACHE_NAME = 'coffee-cache-v1';
+const urlsToCache = [
+    '/',
+    '/index.html',
+    '/style.css',
+    '/app.js',
+    '/espresso.jpg',
+    '/latte.jpg',
+    '/cappuccino.jpg',
+    '/icon-192x192.png',
+    '/icon-512x512.png'
+];
+
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.addAll(urlsToCache);
+            })
+    );
+});
+
+self.addEventListener('fetch',
